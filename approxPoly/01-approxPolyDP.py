@@ -3,10 +3,17 @@
 
 import cv2 as cv
 import numpy as np
+import os
+
+currentDir = os.path.dirname(__file__)
+
+
+def getAbsPath(res):
+    return os.path.join(currentDir, res)
 
 # 多边形逼近
 # 1.先找到轮廓
-img = cv.imread('/Users/wubil/MyGit/opencv-py/approxPolyDP/test01.png', 0)
+img = cv.imread(getAbsPath('test01.png'), 0)
 _, thresh = cv.threshold(img, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
 contours, hierarchy = cv.findContours(thresh, 3, 2)
 cnt = contours[0]

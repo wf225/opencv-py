@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Hello OpenCV.js</title>
+  </head>
+  <body>
+    <p id="status">OpenCV.js is loading...</p>
+    <div>
+      <div class="inputoutput">
+        <canvas id="canvas" width="800" height="500"></canvas>
+        <canvas id="canvasOutput"></canvas>
+      </div>
+    </div>
+
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+      var canvas = document.getElementById("canvas"); // 得到画布
+      var ctx = canvas.getContext("2d"); // 得到画布的上下文对象
+      ctx.strokeStyle = "#FF0000";
+
+      var flag = false;
+      var x = 0; // 鼠标开始移动的位置X
+      var y = 0; // 鼠标开始移动的位置Y
+      var url = "./lena.jpg"; // canvas图片的二进制格式转为dataURL格式
+      var pos = [];
+
+      loadImage(url);
+
+      // draw a test line
+      //   ctx.beginPath();
+      //   ctx.moveTo(50, 50);
+      //   ctx.lineTo(100, 100);
+      //   ctx.stroke();
+
+      /* 为canvas绑定mouse事件 */
+      $("canvas")
+        .mousedown(function (e) {
+          flag = true;
+          x = e.offsetX; // 鼠标落下时的X
+          y = e.offsetY; // 鼠标落下时的Y
+          ctx.moveTo(x, y);
+        })
+        .mouseup(function (e) {
+          flag = false;
+          url = $("canvas")[0].toDataURL(); // 每次 mouseup 都保存一次画布状态
+          showOpenCV();
+          pos = [];
+        })
+        .mousemove(function (e) {
+          if (flag) {
+            pos.push([e.offsetX, e.offsetX]);
+          }
+          drawPencil(e); // 绘制方法
+        });
+
+      function drawPencil(e) {
+        if (flag) {
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke(); // 调用绘制方法
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+        }
+      }
+
+      function drawRect(e) {
+        if (flag) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.beginPath();
+          ctx.strokeRect(x, y, e.offsetX - x, e.offsetY - y);
+        }
+      }
+
+      function drawLine(e) {
+        if (flag) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      }
+
+      function drawCircle(e) {
+        if (flag) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.beginPath();
+          var rx = (e.offsetX - x) / 2;
+          var ry = (e.offsetY - y) / 2;
+          var r = Math.sqrt(rx * rx + ry * ry);
+          ctx.arc(rx + x, ry + y, r, 0, Math.PI * 2); // 第5个参数默认是false-顺时针
+          ctx.stroke();
+        }
+      }
+
+      function loadImage(url) {
+        var img = new Image();
+        img.src = url;
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      }
+
+      function showOpenCV() {
+        // let src = cv.imread("canvas");
+
+        // let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+        // let dst = new cv.Mat();
+        // cv.cvtColor(src, dst, cv.COLOR_RGBA2RGB);
+        // cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY, 0);
+
+        let color = new cv.Scalar(255, 0, 0);
+        // let startPoint = { x: 100, y: 100 };
+        // let endPoint = { x: 200, y: 100 };
+        // cv.line(dst, startPoint, endPoint, color);
+
+        // cv.imshow("canvasOutput", dst);
+        // src.delete();
+        // dst.delete();
+
+        //---
+        // cv.threshold(src, src, 100, 200, cv.THRESH_BINARY);
+        // let contours = new cv.MatVector();
+        // let hierarchy = new cv.Mat();
+        // let poly = new cv.MatVector();
+
+        // approximates each contour to polygon
+        let tmp1 = cv.matFromArray(2, 2, cv.CV_8UC1, [].concat(...pos)); // new cv.Mat([pos]);
+        let tmp2 = new cv.Mat();
+        // let cnt = contours.get(i);
+        // You can try more different parameters
+        cv.approxPolyDP(tmp1, tmp2, 3, true);
+        poly.push_back(tmp2);
+        cnt.delete();
+        tmp1.delete();
+        tmp2.delete();
+
+        // cv.polylines(dst, poly, true, color, 2);
+
+        // let src = cv.imread("canvas");
+        // let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+        // cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+        // cv.threshold(src, src, 245, 255, cv.THRESH_BINARY_INV);
+        // let contours = new cv.MatVector();
+        // let hierarchy = new cv.Mat();
+        // let poly = new cv.MatVector();
+        // cv.findContours(
+        //   src,
+        //   contours,
+        //   hierarchy,
+        //   cv.RETR_TREE,
+        //   cv.CHAIN_APPROX_SIMPLE
+        // );
+        // // approximates each contour to polygon
+        // for (let i = 0; i < contours.size(); ++i) {
+        //   let tmp = new cv.Mat();
+        //   let cnt = contours.get(i);
+        //   // You can try more different parameters
+        //   cv.approxPolyDP(cnt, tmp, 3, true);
+        //   poly.push_back(tmp);
+        //   cnt.delete();
+        //   tmp.delete();
+        // }
+        // // draw contours with random Scalar
+        // for (let i = 0; i < contours.size(); ++i) {
+        //   //   let color = new cv.Scalar(
+        //   //     Math.round(Math.random() * 255),
+        //   //     Math.round(Math.random() * 255),
+        //   //     Math.round(Math.random() * 255)
+        //   //   );
+        //   cv.drawContours(dst, poly, i, color, 1, 8, hierarchy, 0);
+        // }
+        cv.imshow("canvasOutput", dst);
+        src.delete();
+        dst.delete();
+        hierarchy.delete();
+        contours.delete();
+        poly.delete();
+        //---
+      }
+
+      //   let imgElement = document.getElementById("imageSrc");
+      //   let inputElement = document.getElementById("fileInput");
+
+      //   inputElement.addEventListener(
+      //     "change",
+      //     (e) => {
+      //       imgElement.src = URL.createObjectURL(e.target.files[0]);
+      //     },
+      //     false
+      //   );
+
+      //   imgElement.onload = function () {
+      //     let src = cv.imread(imgElement);
+
+      //     let dst = cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC3);
+      //     let lines = new cv.Mat();
+      //     let color = new cv.Scalar(255, 0, 0);
+      //     cv.cvtColor(src, src, cv.COLOR_RGBA2GRAY, 0);
+      //     cv.Canny(src, src, 50, 200, 3);
+      //     // You can try more different parameters
+      //     cv.HoughLinesP(src, lines, 1, Math.PI / 180, 2, 0, 0);
+      //     // draw lines
+      //     for (let i = 0; i < lines.rows; ++i) {
+      //       let startPoint = new cv.Point(
+      //         lines.data32S[i * 4],
+      //         lines.data32S[i * 4 + 1]
+      //       );
+      //       let endPoint = new cv.Point(
+      //         lines.data32S[i * 4 + 2],
+      //         lines.data32S[i * 4 + 3]
+      //       );
+      //       cv.line(dst, startPoint, endPoint, color);
+      //     }
+      //     cv.imshow("canvasOutput", dst);
+      //     src.delete();
+      //     dst.delete();
+      //     lines.delete();
+      //   };
+
+      function onOpenCvReady() {
+        document.getElementById("status").innerHTML = "OpenCV.js is ready.";
+      }
+    </script>
+    <script
+      async
+      src="https://docs.opencv.org/3.4.0/opencv.js"
+      onload="onOpenCvReady();"
+      type="text/javascript"
+    ></script>
+  </body>
+</html>
