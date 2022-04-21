@@ -1,6 +1,6 @@
 # opencv-py
 
-OpenCV Python env setup
+## OpenCV Python env setup
 
 * [Install Opencv 4 on MacOS](https://www.geeksforgeeks.org/how-to-install-opencv-4-on-macos/)
 
@@ -28,3 +28,21 @@ OpenCV Python env setup
 * [Python-Numpy中Array用法总结](https://blog.csdn.net/MsSpark/article/details/83050000)
 
 * [opencv(python)图像处理入门](https://www.cnblogs.com/wojianxin/category/1682246.html?page=2)
+
+## Content
+
+### 1. Image geometry detection
+
+![](./images/01.png)
+
+### 2. Face & eyes detection
+
+![](./images/02.png)
+
+### 3. Face tags
+
+![](./images/03.png)
+
+### 4. Training and detection
+
+![](./images/04.png)
